@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#E8D21D">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Такси Учёт</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1B1B2F;
+  --card: #162447;
+  --card2: #1E2A4A;
+  --gold: #E8D21D;
+  --green: #00C853;
+  --red: #FF5252;
+  --blue: #1F4068;
+  --white: #FFFFFF;
+  --gray: #B0BEC5;
+  --input-bg: #263859;
+  --font: 'Nunito', sans-serif;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #F0F2F5;
+    --card: #FFFFFF;
+    --card2: #F8F9FA;
+    --gold: #D4A017;
+    --green: #2E7D32;
+    --red: #C62828;
+    --blue: #1565C0;
+    --white: #1B1B2F;
+    --gray: #5F6368;
+    --input-bg: #E8EAF0;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100dvh;
+  padding-bottom: 80px;
+  -webkit-tap-highlight-color: transparent;
+}
+.app { max-width: 480px; margin: 0 auto; }
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  display: flex; justify-content: space-around;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  border-top: 2px solid var(--gold);
+  z-index: 100;
+}
+.nav-btn {
+  background: none; border: none; color: var(--gray);
+  font-size: 11px; font-family: var(--font); font-weight: 600;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 8px; cursor: pointer; transition: .2s;
+}
+.nav-btn.active { color: var(--gold); }
+.nav-btn span { font-size: 22px; }
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, var(--card) 0%, var(--blue) 100%);
+  padding: 20px 16px 16px;
+  text-align: center;
+}
+.header h1 { font-size: 20px; font-weight: 900; color: var(--gold); }
+.header p { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+/* ===== SCREENS ===== */
+.screen { display: none; padding: 16px; }
+.screen.active { display: block; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.card-title {
+  font-size: 13px; font-weight: 700; color: var(--gold);
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;
+}
+.stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0;
+}
+.stat-label { font-size: 13px; color: var(--gray); }
+.stat-value { font-size: 15px; font-weight: 800; }
+.stat-value.green { color: var(--green); }
+.stat-value.red { color: var(--red); }
+.stat-value.gold { color: var(--gold); }
+
+/* ===== BIG STATS ===== */
+.big-stat {
+  text-align: center; padding: 20px;
+  background: linear-gradient(135deg, var(--card), var(--card2));
+  border-radius: 16px; margin-bottom: 12px;
+}
+.big-stat .number { font-size: 36px; font-weight: 900; }
+.big-stat .label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex; gap: 8px; margin-bottom: 16px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.tab {
+  padding: 8px 16px; border-radius: 20px;
+  background: var(--card); color: var(--gray);
+  font-size: 13px; font-weight: 700; border: none;
+  cursor: pointer; white-space: nowrap; font-family: var(--font);
+}
+.tab.active { background: var(--gold); color: var(--bg); }
+
+/* ===== FORM ===== */
+.form-group { margin-bottom: 14px; }
+.form-label {
+  font-size: 12px; font-weight: 700; color: var(--gold);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+}
+.form-input {
+  width: 100%; padding: 12px 14px;
+  background: var(--input-bg); border: 2px solid transparent;
+  border-radius: 12px; color: var(--white);
+  font-size: 16px; font-family: var(--font); font-weight: 600;
+  outline: none; transition: .2s;
+}
+.form-input:focus { border-color: var(--gold); }
+.form-input::placeholder { color: var(--gray); opacity: 0.5; }
+
+.btn {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 800;
+  font-family: var(--font); cursor: pointer;
+  transition: .2s; margin-top: 8px;
+}
+.btn-primary { background: var(--gold); color: var(--bg); }
+.btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+.btn-danger { background: var(--red); color: white; }
+
+/* ===== SHIFT LIST ===== */
+.shift-item {
+  background: var(--card);
+  border-radius: 12px; padding: 14px;
+  margin-bottom: 8px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: .15s; border-left: 4px solid var(--green);
+}
+.shift-item.negative { border-left-color: var(--red); }
+.shift-item:active { transform: scale(0.99); }
+.shift-date { font-size: 14px; font-weight: 700; }
+.shift-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.shift-profit { font-size: 16px; font-weight: 900; text-align: right; }
+
+/* ===== CHART ===== */
+.chart-container { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 160px; padding-top: 10px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bar {
+  width: 100%; border-radius: 4px 4px 0 0;
+  min-height: 2px; transition: height .5s ease;
+}
+.bar.positive { background: var(--green); }
+.bar.negative { background: var(--red); }
+.bar-label { font-size: 9px; color: var(--gray); }
+.bar-value { font-size: 9px; font-weight: 700; color: var(--white); }
+
+/* ===== PROGRESS ===== */
+.progress-bar { height: 12px; background: var(--input-bg); border-radius: 6px; overflow: hidden; margin: 10px 0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--green)); border-radius: 6px; transition: width .5s; }
+
+/* ===== EXPENSE PIE ===== */
+.expense-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.expense-bar-bg { flex: 1; height: 8px; background: var(--input-bg); border-radius: 4px; overflow: hidden; }
+.expense-bar-fill { height: 100%; border-radius: 4px; }
+.expense-label { font-size: 12px; color: var(--gray); min-width: 80px; }
+.expense-val { font-size: 12px; font-weight: 700; min-width: 60px; text-align: right; }
+.expense-pct { font-size: 11px; color: var(--gray); min-width: 40px; text-align: right; }
+
+/* ===== SETTINGS ===== */
+.setting-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.setting-label { font-size: 14px; }
+.setting-value { font-size: 14px; font-weight: 700; color: var(--gold); }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+  background: var(--green); color: white; padding: 12px 24px;
+  border-radius: 12px; font-weight: 700; font-size: 14px;
+  z-index: 999; transition: transform .3s ease; font-family: var(--font);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: var(--red); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 200; display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card); border-radius: 20px 20px 0 0;
+  padding: 24px 16px env(safe-area-inset-bottom, 16px);
+  width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
+}
+.modal h3 { font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 16px; text-align: center; }
+
+/* ===== SYNC STATUS ===== */
+.sync-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block; margin-right: 6px;
+}
+.sync-dot.online { background: var(--green); }
+.sync-dot.offline { background: var(--red); }
+.sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--gray); }
+.empty-state span { font-size: 48px; display: block; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🚕 Такси Учёт</h1>
+    <p><span class="sync-dot" id="syncDot"></span><span id="syncText">Локально</span></p>
+  </div>
+
+  <!-- ===== HOME ===== -->
+  <div class="screen active" id="screenHome">
+    <div class="tabs" id="homeTabs">
+      <button class="tab active" onclick="setHomePeriod('today')">Сегодня</button>
+      <button class="tab" onclick="setHomePeriod('week')">Неделя</button>
+      <button class="tab" onclick="setHomePeriod('month')">Месяц</button>
+    </div>
+    <div class="big-stat">
+      <div class="number green" id="homeProfitNum">0 ₽</div>
+      <div class="label">Чистая прибыль</div>
+    </div>
+    <div class="card">
+      <div class="stat-row"><span class="stat-label">💰 Доход</span><span class="stat-value green" id="homeIncome">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">💸 Расходы</span><span class="stat-value red" id="homeExpenses">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">📋 Заявок</span><span class="stat-value" id="homeOrders">0</span></div>
+      <div class="stat-row"><span class="stat-label">⏱ Часов</span><span class="stat-value" id="homeHours">0</span></div>
+      <div class="stat-row"><span class="stat-label">📊 Средний чек</span><span class="stat-value gold" id="homeAvg">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">⏱ ₽/час</span><span class="stat-value gold" id="homePerHour">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">📅 Смен</span><span class="stat-value" id="homeDays">0</span></div>
+    </div>
+    <!-- Goal progress -->
+    <div class="card" id="goalCard" style="display:none">
+      <div class="card-title">🎯 Цель на месяц</div>
+      <div class="stat-row"><span class="stat-label">Цель</span><span class="stat-value gold" id="goalTarget">0 ₽</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="goalFill" style="width:0%"></div></div>
+      <div class="stat-row"><span class="stat-label">Выполнено</span><span class="stat-value green" id="goalPct">0%</span></div>
+      <div class="stat-row"><span class="stat-label">Осталось</span><span class="stat-value" id="goalRemain">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">Нужно/день</span><span class="stat-value gold" id="goalPerDay">0 ₽</span></div>
+    </div>
+  </div>
+
+  <!-- ===== ADD SHIFT ===== -->
+  <div class="screen" id="screenAdd">
+    <div class="card">
+      <div class="card-title">📝 Новая смена</div>
+      <div class="form-group">
+        <div class="form-label">📅 Дата</div>
+        <input type="date" class="form-input" id="fDate">
+      </div>
+      <div class="form-group">
+        <div class="form-label">⏱ Смена (часов)</div>
+        <input type="number" step="0.5" class="form-input" id="fHours" placeholder="10">
+      </div>
+      <div class="form-group">
+        <div class="form-label">📋 Заявки</div>
+        <input type="number" class="form-input" id="fOrders" placeholder="20">
+      </div>
+      <div class="form-group">
+        <div class="form-label">💵 Наличные (₽)</div>
+        <input type="number" class="form-input" id="fCash" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">💳 Безнал (₽)</div>
+        <input type="number" class="form-input" id="fCard" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">💎 Чаевые (₽)</div>
+        <input type="number" class="form-input" id="fTips" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">🎁 Бонусы (₽)</div>
+        <input type="number" class="form-input" id="fBonuses" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">🔑 Аренда авто (₽)</div>
+        <input type="number" class="form-input" id="fRent" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">📊 Комиссия (₽)</div>
+        <input type="number" class="form-input" id="fComm" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">⛽ Топливо — литры</div>
+        <input type="number" step="0.1" class="form-input" id="fFuelL" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">⛽ Топливо — сумма (₽)</div>
+        <input type="number" class="form-input" id="fFuelC" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">🧼 Мойка (₽)</div>
+        <input type="number" class="form-input" id="fWash" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">🍽 Обед (₽)</div>
+        <input type="number" class="form-input" id="fLunch" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">🚨 Штрафы (₽)</div>
+        <input type="number" class="form-input" id="fFines" placeholder="0">
+      </div>
+      <div class="form-group">
+        <div class="form-label">📝 Прочие расходы (₽)</div>
+        <input type="number" class="form-input" id="fOther" placeholder="0">
+      </div>
+      <button class="btn btn-primary" onclick="saveShift()">✅ Записать смену</button>
+    </div>
+  </div>
+
+  <!-- ===== SHIFTS LIST ===== -->
+  <div class="screen" id="screenList">
+    <div class="tabs" id="monthTabs"></div>
+    <div id="shiftsList"></div>
+  </div>
+
+  <!-- ===== STATS ===== -->
+  <div class="screen" id="screenStats">
+    <div class="tabs">
+      <button class="tab active" onclick="setStatTab('profit')">Прибыль</button>
+      <button class="tab" onclick="setStatTab('income')">Доход</button>
+      <button class="tab" onclick="setStatTab('expenses')">Расходы</button>
+    </div>
+    <div class="chart-container">
+      <div class="card-title" id="chartTitle">Прибыль по дням</div>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+    <div class="card" id="expenseBreakdown">
+      <div class="card-title">💸 Расходы по категориям</div>
+      <div id="expenseList"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🏆 Рекорды месяца</div>
+      <div class="stat-row"><span class="stat-label">Лучший день</span><span class="stat-value green" id="statBest">—</span></div>
+      <div class="stat-row"><span class="stat-label">Худший день</span><span class="stat-value red" id="statWorst">—</span></div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS ===== -->
+  <div class="screen" id="screenSettings">
+    <div class="card">
+      <div class="card-title">🔗 Google Таблица</div>
+      <div class="form-group">
+        <div class="form-label">Apps Script URL</div>
+        <input type="text" class="form-input" id="sScriptUrl" placeholder="https://script.google.com/macros/s/...../exec">
+      </div>
+      <p style="font-size:11px;color:var(--gray);margin:8px 0">Через Apps Script приложение читает И записывает данные в таблицу</p>
+      <button class="btn btn-primary" onclick="saveSettings()">💾 Сохранить</button>
+      <button class="btn btn-primary" style="background:var(--blue);color:white;margin-top:8px" onclick="syncFromSheet()">🔄 Загрузить из таблицы</button>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Цель на месяц</div>
+      <div class="form-group">
+        <input type="number" class="form-input" id="sGoal" placeholder="50000">
+      </div>
+      <button class="btn btn-primary" onclick="saveGoal()">Сохранить цель</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Данные</div>
+      <button class="btn btn-primary" style="background:var(--blue);color:white" onclick="exportData()">📥 Экспорт данных (JSON)</button>
+      <button class="btn btn-primary" style="background:var(--blue);color:white;margin-top:8px" onclick="document.getElementById('importFile').click()">📤 Импорт данных</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn btn-danger" style="margin-top:8px" onclick="clearAllData()">🗑 Очистить все данные</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EDIT MODAL ===== -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ Редактировать смену</h3>
+    <div id="editForm"></div>
+    <button class="btn btn-primary" onclick="saveEdit()">💾 Сохранить</button>
+    <button class="btn btn-danger" style="margin-top:8px" onclick="deleteShift()">🗑 Удалить смену</button>
+    <button class="btn" style="background:var(--input-bg);color:var(--white);margin-top:8px" onclick="closeEdit()">Отмена</button>
+  </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="go('Home')"><span>🏠</span>Главная</button>
+  <button class="nav-btn" onclick="go('Add')"><span>➕</span>Смена</button>
+  <button class="nav-btn" onclick="go('List')"><span>📋</span>Список</button>
+  <button class="nav-btn" onclick="go('Stats')"><span>📊</span>Графики</button>
+  <button class="nav-btn" onclick="go('Settings')"><span>⚙️</span>Настройки</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== STATE ====================
+const FIELDS = [
+  {key:'date',label:'📅 Дата',type:'date'},
+  {key:'hours',label:'⏱ Смена (ч)',type:'number',step:'0.5'},
+  {key:'orders',label:'📋 Заявки',type:'number'},
+  {key:'earned_cash',label:'💵 Наличные',type:'number'},
+  {key:'earned_card',label:'💳 Безнал',type:'number'},
+  {key:'tips',label:'💎 Чаевые',type:'number'},
+  {key:'bonuses',label:'🎁 Бонусы',type:'number'},
+  {key:'rent',label:'🔑 Аренда',type:'number'},
+  {key:'commission',label:'📊 Комиссия',type:'number'},
+  {key:'fuel_liters',label:'⛽ Литры',type:'number',step:'0.1'},
+  {key:'fuel_cost',label:'⛽ Топливо ₽',type:'number'},
+  {key:'wash',label:'🧼 Мойка',type:'number'},
+  {key:'lunch',label:'🍽 Обед',type:'number'},
+  {key:'fines',label:'🚨 Штрафы',type:'number'},
+  {key:'other',label:'📝 Прочее',type:'number'},
+];
+
+// Column map matching the Google Sheet (1-indexed)
+const COL_MAP = {date:2,hours:4,orders:5,earned_cash:6,earned_card:7,tips:8,bonuses:9,
+  rent:12,commission:13,fuel_liters:14,fuel_cost:15,wash:16,lunch:17,fines:18,other:19};
+const SHEET_NAMES = {3:'Март 2026',4:'Апрель 2026',5:'Май 2026'};
+
+let shifts = JSON.parse(localStorage.getItem('taxi_shifts') || '[]');
+let settings = JSON.parse(localStorage.getItem('taxi_settings') || '{}');
+let homePeriod = 'today';
+let statTab = 'profit';
+let editIdx = -1;
+let listMonth = new Date().getMonth() + 1;
+
+// ==================== NAV ====================
+function go(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if (name === 'Home') renderHome();
+  if (name === 'List') renderList();
+  if (name === 'Stats') renderStats();
+  if (name === 'Settings') loadSettings();
+  if (name === 'Add') {
+    document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('#screenAdd input[type=number]').forEach(i => i.value = '');
+  }
+}
+
+// ==================== HELPERS ====================
+function n(v) { return parseFloat(v) || 0; }
+function fmt(v) { return Math.round(v).toLocaleString('ru-RU'); }
+function calcIncome(s) { return n(s.earned_cash)+n(s.earned_card)+n(s.tips)+n(s.bonuses); }
+function calcExpenses(s) { return n(s.rent)+n(s.commission)+n(s.fuel_cost)+n(s.wash)+n(s.lunch)+n(s.fines)+n(s.other); }
+function calcProfit(s) { return calcIncome(s) - calcExpenses(s); }
+function parseDate(d) { // "DD.MM.YYYY" or "YYYY-MM-DD"
+  if (!d) return null;
+  if (d.includes('-')) return new Date(d);
+  const [dd,mm,yy] = d.split('.');
+  return new Date(yy, mm-1, dd);
+}
+function fmtDate(d) { // Date -> "DD.MM.YYYY"
+  if (typeof d === 'string' && d.includes('-')) d = new Date(d);
+  if (!(d instanceof Date)) return d;
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+}
+function dayName(d) {
+  const dt = typeof d === 'string' ? parseDate(d) : d;
+  return ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][dt.getDay()];
+}
+function toast(msg, err) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 2500);
+}
+function save() {
+  localStorage.setItem('taxi_shifts', JSON.stringify(shifts));
+  shifts.sort((a,b) => {
+    const da = parseDate(a.date), db = parseDate(b.date);
+    return da - db;
+  });
+}
+
+// ==================== SAVE SHIFT ====================
+function dateToRu(isoDate) {
+  // YYYY-MM-DD -> DD.MM.YYYY
+  const [y,m,d] = isoDate.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+async function saveShift() {
+  const d = document.getElementById('fDate').value;
+  if (!d) { toast('Укажи дату!', true); return; }
+  const shift = {};
+  shift.date = d;
+  shift.hours = n(document.getElementById('fHours').value);
+  shift.orders = n(document.getElementById('fOrders').value);
+  shift.earned_cash = n(document.getElementById('fCash').value);
+  shift.earned_card = n(document.getElementById('fCard').value);
+  shift.tips = n(document.getElementById('fTips').value);
+  shift.bonuses = n(document.getElementById('fBonuses').value);
+  shift.rent = n(document.getElementById('fRent').value);
+  shift.commission = n(document.getElementById('fComm').value);
+  shift.fuel_liters = n(document.getElementById('fFuelL').value);
+  shift.fuel_cost = n(document.getElementById('fFuelC').value);
+  shift.wash = n(document.getElementById('fWash').value);
+  shift.lunch = n(document.getElementById('fLunch').value);
+  shift.fines = n(document.getElementById('fFines').value);
+  shift.other = n(document.getElementById('fOther').value);
+  if (!shift.hours || !shift.orders) { toast('Заполни часы и заявки!', true); return; }
+  
+  // Save locally
+  shifts.push(shift);
+  save();
+  
+  // Write to Google Sheets via Apps Script
+  if (settings.scriptUrl) {
+    try {
+      const sheetShift = {...shift, date: dateToRu(shift.date)};
+      const r = await fetch(settings.scriptUrl, {
+        method: 'POST', 
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({action: 'add', shift: sheetShift})
+      });
+      const result = await r.json();
+      if (result.success) {
+        toast('✅ Записано в таблицу и локально!');
+      } else {
+        toast('⚠️ Локально ок, таблица: ' + (result.error || 'ошибка'), true);
+      }
+    } catch(e) {
+      toast('⚠️ Сохранено локально. Таблица недоступна.', true);
+    }
+  } else {
+    toast('✅ Смена записана локально!');
+  }
+  
+  document.querySelectorAll('#screenAdd input[type=number]').forEach(i => i.value = '');
+  document.querySelector('.nav-btn').click();
+  renderHome();
+}
+
+// ==================== HOME ====================
+function setHomePeriod(p) {
+  homePeriod = p;
+  document.querySelectorAll('#homeTabs .tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderHome();
+}
+function renderHome() {
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay() + 1);
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  let filtered = shifts.filter(s => {
+    const d = parseDate(s.date);
+    if (homePeriod === 'today') return s.date === today;
+    if (homePeriod === 'week') return d >= weekStart && d <= now;
+    if (homePeriod === 'month') return d >= monthStart && d <= now;
+  });
+
+  let income=0, expenses=0, orders=0, hours=0;
+  filtered.forEach(s => {
+    income += calcIncome(s); expenses += calcExpenses(s);
+    orders += n(s.orders); hours += n(s.hours);
+  });
+  const profit = income - expenses;
+  const el = (id, v) => document.getElementById(id).textContent = v;
+  const profitEl = document.getElementById('homeProfitNum');
+  profitEl.textContent = (profit >= 0 ? '+' : '') + fmt(profit) + ' ₽';
+  profitEl.className = 'number ' + (profit >= 0 ? 'green' : 'red');
+  el('homeIncome', fmt(income) + ' ₽');
+  el('homeExpenses', fmt(expenses) + ' ₽');
+  el('homeOrders', orders);
+  el('homeHours', hours);
+  el('homeAvg', orders ? fmt(income / orders) + ' ₽' : '—');
+  el('homePerHour', hours ? fmt(profit / hours) + ' ₽' : '—');
+  el('homeDays', filtered.length);
+
+  // Goal
+  const goal = n(settings.goal);
+  const goalCard = document.getElementById('goalCard');
+  if (goal > 0 && homePeriod === 'month') {
+    goalCard.style.display = '';
+    const monthProfit = profit;
+    const pct = Math.min(Math.round(monthProfit / goal * 100), 100);
+    const daysLeft = 31 - filtered.length;
+    el('goalTarget', fmt(goal) + ' ₽');
+    el('goalPct', pct + '%');
+    el('goalRemain', fmt(goal - monthProfit) + ' ₽');
+    el('goalPerDay', daysLeft > 0 ? fmt((goal - monthProfit) / daysLeft) + ' ₽' : '—');
+    document.getElementById('goalFill').style.width = Math.max(0, pct) + '%';
+  } else {
+    goalCard.style.display = 'none';
+  }
+}
+
+// ==================== LIST ====================
+function renderList() {
+  // Month tabs
+  const tabsEl = document.getElementById('monthTabs');
+  tabsEl.innerHTML = '';
+  [3,4,5].forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (m === listMonth ? ' active' : '');
+    btn.textContent = SHEET_NAMES[m];
+    btn.onclick = () => { listMonth = m; renderList(); };
+    tabsEl.appendChild(btn);
+  });
+
+  const listEl = document.getElementById('shiftsList');
+  const monthShifts = shifts.filter(s => {
+    const d = parseDate(s.date);
+    return d && (d.getMonth() + 1) === listMonth;
+  }).sort((a,b) => parseDate(b.date) - parseDate(a.date));
+
+  if (!monthShifts.length) {
+    listEl.innerHTML = '<div class="empty-state"><span>📋</span>Нет смен за этот месяц</div>';
+    return;
+  }
+
+  listEl.innerHTML = monthShifts.map(s => {
+    const p = calcProfit(s);
+    const i = calcIncome(s);
+    const idx = shifts.indexOf(s);
+    const dt = parseDate(s.date);
+    return `<div class="shift-item ${p<0?'negative':''}" onclick="openEdit(${idx})">
+      <div>
+        <div class="shift-date">${fmtDate(dt)} (${dayName(dt)})</div>
+        <div class="shift-sub">📋 ${s.orders} заявок · ⏱ ${s.hours}ч · 💰 ${fmt(i)} ₽</div>
+      </div>
+      <div class="shift-profit ${p>=0?'green':'red'}">${p>=0?'+':''}${fmt(p)} ₽</div>
+    </div>`;
+  }).join('');
+}
+
+// ==================== EDIT ====================
+function openEdit(idx) {
+  editIdx = idx;
+  const s = shifts[idx];
+  const form = document.getElementById('editForm');
+  form.innerHTML = FIELDS.map(f => {
+    let val = s[f.key] || '';
+    if (f.key === 'date' && val.includes('-')) {
+      // keep as YYYY-MM-DD for input type=date
+    }
+    return `<div class="form-group">
+      <div class="form-label">${f.label}</div>
+      <input type="${f.type}" ${f.step?'step="'+f.step+'"':''} class="form-input" id="e_${f.key}" value="${val}">
+    </div>`;
+  }).join('');
+  document.getElementById('editModal').classList.add('show');
+}
+function closeEdit() { document.getElementById('editModal').classList.remove('show'); editIdx = -1; }
+
+async function saveEdit() {
+  if (editIdx < 0) return;
+  const oldDate = fmtDate(parseDate(shifts[editIdx].date));
+  const oldMonth = parseDate(shifts[editIdx].date).getMonth() + 1;
+  
+  FIELDS.forEach(f => {
+    const v = document.getElementById('e_' + f.key).value;
+    shifts[editIdx][f.key] = f.type === 'number' ? n(v) : v;
+  });
+  save();
+  
+  // Sync each changed field to sheet
+  if (settings.scriptUrl) {
+    try {
+      const s = shifts[editIdx];
+      // Re-add the entire shift (delete old + add new)
+      await fetch(settings.scriptUrl, {
+        method: 'POST', headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({action: 'delete', date: oldDate, month: oldMonth})
+      });
+      const sheetShift = {...s, date: dateToRu(s.date)};
+      await fetch(settings.scriptUrl, {
+        method: 'POST', headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({action: 'add', shift: sheetShift})
+      });
+    } catch(e) { console.warn('Sheet sync error:', e); }
+  }
+  
+  closeEdit();
+  toast('✅ Сохранено!');
+  renderList();
+  renderHome();
+}
+
+async function deleteShift() {
+  if (editIdx < 0) return;
+  if (!confirm('Удалить эту смену?')) return;
+  
+  const s = shifts[editIdx];
+  const dateStr = fmtDate(parseDate(s.date));
+  const month = parseDate(s.date).getMonth() + 1;
+  
+  shifts.splice(editIdx, 1);
+  save();
+  
+  // Delete from sheet
+  if (settings.scriptUrl) {
+    try {
+      await fetch(settings.scriptUrl, {
+        method: 'POST', headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({action: 'delete', date: dateStr, month: month})
+      });
+    } catch(e) { console.warn('Sheet delete error:', e); }
+  }
+  
+  closeEdit();
+  toast('🗑 Удалено');
+  renderList();
+}
+
+// ==================== STATS ====================
+function setStatTab(t) {
+  statTab = t;
+  document.querySelectorAll('#screenStats .tabs .tab').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderStats();
+}
+function renderStats() {
+  const now = new Date();
+  const monthShifts = shifts.filter(s => {
+    const d = parseDate(s.date);
+    return d && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).sort((a,b) => parseDate(a.date) - parseDate(b.date));
+
+  // Bar chart
+  const chart = document.getElementById('barChart');
+  const title = document.getElementById('chartTitle');
+  let values = [];
+  if (statTab === 'profit') { title.textContent = 'Прибыль по дням'; values = monthShifts.map(s => ({v: calcProfit(s), d: s.date})); }
+  if (statTab === 'income') { title.textContent = 'Доход по дням'; values = monthShifts.map(s => ({v: calcIncome(s), d: s.date})); }
+  if (statTab === 'expenses') { title.textContent = 'Расходы по дням'; values = monthShifts.map(s => ({v: calcExpenses(s), d: s.date})); }
+
+  if (!values.length) {
+    chart.innerHTML = '<div class="empty-state" style="height:100%;display:flex;align-items:center;justify-content:center"><span style="font-size:24px">📊</span></div>';
+  } else {
+    const maxAbs = Math.max(...values.map(v => Math.abs(v.v)), 1);
+    chart.innerHTML = values.map(v => {
+      const h = Math.max(Math.abs(v.v) / maxAbs * 140, 4);
+      const dt = parseDate(v.d);
+      return `<div class="bar-col">
+        <div class="bar-value">${fmt(v.v)}</div>
+        <div class="bar ${v.v>=0?'positive':'negative'}" style="height:${h}px"></div>
+        <div class="bar-label">${dt.getDate()}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Expense breakdown
+  const cats = [
+    {key:'rent',label:'🔑 Аренда',color:'#E8D21D'},
+    {key:'commission',label:'📊 Комиссия',color:'#FF9800'},
+    {key:'fuel_cost',label:'⛽ Топливо',color:'#2196F3'},
+    {key:'wash',label:'🧼 Мойка',color:'#00BCD4'},
+    {key:'lunch',label:'🍽 Обед',color:'#8BC34A'},
+    {key:'fines',label:'🚨 Штрафы',color:'#F44336'},
+    {key:'other',label:'📝 Прочее',color:'#9C27B0'},
+  ];
+  let totals = {};
+  cats.forEach(c => totals[c.key] = 0);
+  monthShifts.forEach(s => cats.forEach(c => totals[c.key] += n(s[c.key])));
+  const totalExp = Object.values(totals).reduce((a,b) => a+b, 0);
+  const maxExp = Math.max(...Object.values(totals), 1);
+
+  document.getElementById('expenseList').innerHTML = cats.map(c => {
+    const v = totals[c.key];
+    const pct = totalExp ? Math.round(v/totalExp*100) : 0;
+    const w = maxExp ? Math.round(v/maxExp*100) : 0;
+    return `<div class="expense-item">
+      <div class="expense-label">${c.label}</div>
+      <div class="expense-bar-bg"><div class="expense-bar-fill" style="width:${w}%;background:${c.color}"></div></div>
+      <div class="expense-val">${fmt(v)} ₽</div>
+      <div class="expense-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // Best/worst
+  if (monthShifts.length) {
+    let best = monthShifts[0], worst = monthShifts[0];
+    monthShifts.forEach(s => {
+      if (calcProfit(s) > calcProfit(best)) best = s;
+      if (calcProfit(s) < calcProfit(worst)) worst = s;
+    });
+    document.getElementById('statBest').textContent = fmtDate(parseDate(best.date)) + ' → ' + fmt(calcProfit(best)) + ' ₽';
+    document.getElementById('statWorst').textContent = fmtDate(parseDate(worst.date)) + ' → ' + fmt(calcProfit(worst)) + ' ₽';
+  }
+}
+
+// ==================== SETTINGS & SYNC ====================
+function loadSettings() {
+  document.getElementById('sScriptUrl').value = settings.scriptUrl || '';
+  document.getElementById('sGoal').value = settings.goal || '';
+  updateSyncStatus();
+}
+function saveSettings() {
+  settings.scriptUrl = document.getElementById('sScriptUrl').value.trim();
+  localStorage.setItem('taxi_settings', JSON.stringify(settings));
+  updateSyncStatus();
+  toast('💾 Настройки сохранены!');
+}
+function saveGoal() {
+  settings.goal = n(document.getElementById('sGoal').value);
+  localStorage.setItem('taxi_settings', JSON.stringify(settings));
+  toast('🎯 Цель сохранена!');
+  renderHome();
+}
+function updateSyncStatus() {
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncText');
+  if (settings.scriptUrl) {
+    dot.className = 'sync-dot online';
+    txt.textContent = 'Подключено к таблице';
+  } else {
+    dot.className = 'sync-dot offline';
+    txt.textContent = 'Только локально';
+  }
+}
+
+async function syncFromSheet() {
+  if (!settings.scriptUrl) { toast('Вставь Apps Script URL в настройках!', true); return; }
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot syncing';
+  document.getElementById('syncText').textContent = 'Загрузка...';
+  try {
+    const r = await fetch(settings.scriptUrl + '?action=read');
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    
+    // Convert DD.MM.YYYY dates to YYYY-MM-DD for local storage
+    const allShifts = (data.shifts || []).map(s => {
+      let dateStr = s.date;
+      if (dateStr && dateStr.includes('.')) {
+        const [dd,mm,yy] = dateStr.split('.');
+        dateStr = `${yy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`;
+      }
+      return {...s, date: dateStr};
+    });
+    
+    shifts = allShifts;
+    save();
+    updateSyncStatus();
+    toast(`🔄 Загружено ${shifts.length} смен!`);
+    renderHome();
+  } catch(e) {
+    toast('❌ ' + e.message, true);
+    dot.className = 'sync-dot offline';
+    document.getElementById('syncText').textContent = 'Ошибка загрузки';
+  }
+}
+
+// ==================== EXPORT/IMPORT ====================
+function exportData() {
+  const data = JSON.stringify({shifts, settings}, null, 2);
+  const blob = new Blob([data], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `taxi_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('📥 Экспортировано!');
+}
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data.shifts) { shifts = data.shifts; save(); }
+      if (data.settings) { settings = data.settings; localStorage.setItem('taxi_settings', JSON.stringify(settings)); }
+      toast(`📤 Импортировано ${shifts.length} смен!`);
+      renderHome();
+    } catch(err) { toast('❌ Ошибка файла', true); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+function clearAllData() {
+  if (!confirm('Удалить ВСЕ данные?')) return;
+  if (!confirm('Точно? Это необратимо!')) return;
+  shifts = [];
+  save();
+  toast('🗑 Данные очищены');
+  renderHome();
+}
+
+// ==================== INIT ====================
+updateSyncStatus();
+renderHome();
+// Set today's date
+document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+// Register SW
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
