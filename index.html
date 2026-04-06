@@ -12,17 +12,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #1B1B2F;
-  --card: #162447;
-  --card2: #1E2A4A;
+  --bg: #0F1420;
+  --card: #1A2232;
+  --card2: #1E2940;
   --gold: #E8D21D;
-  --green: #00C853;
+  --gold-dim: rgba(232,210,29,0.12);
+  --green: #00E676;
+  --green-dim: rgba(0,230,118,0.10);
   --red: #FF5252;
+  --red-dim: rgba(255,82,82,0.10);
   --blue: #1F4068;
-  --white: #FFFFFF;
-  --gray: #B0BEC5;
-  --input-bg: #263859;
+  --white: #ECF0F6;
+  --gray: #7B8FA0;
+  --input-bg: #232F42;
   --font: 'Nunito', sans-serif;
+  --shadow: 0 4px 24px rgba(0,0,0,0.25);
+  --radius: 16px;
 }
 @media (prefers-color-scheme: light) {
   :root {
@@ -30,12 +35,16 @@
     --card: #FFFFFF;
     --card2: #F8F9FA;
     --gold: #D4A017;
+    --gold-dim: rgba(212,160,23,0.1);
     --green: #2E7D32;
+    --green-dim: rgba(46,125,50,0.08);
     --red: #C62828;
+    --red-dim: rgba(198,40,40,0.08);
     --blue: #1565C0;
     --white: #1B1B2F;
     --gray: #5F6368;
     --input-bg: #E8EAF0;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,86 +58,119 @@ body {
 }
 .app { max-width: 480px; margin: 0 auto; }
 
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, #1A2232 0%, #1F4068 100%);
+  padding: 18px 16px 14px;
+  text-align: center;
+  border-bottom: 3px solid var(--gold);
+}
+.header h1 { font-size: 21px; font-weight: 900; color: var(--gold); letter-spacing: 0.5px; }
+.header p { font-size: 12px; color: var(--gray); margin-top: 3px; }
+
 /* ===== NAV ===== */
 .nav {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: var(--card);
   display: flex; justify-content: space-around;
-  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  padding: 6px 0 env(safe-area-inset-bottom, 6px);
   border-top: 2px solid var(--gold);
   z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
 }
 .nav-btn {
   background: none; border: none; color: var(--gray);
-  font-size: 11px; font-family: var(--font); font-weight: 600;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 4px 8px; cursor: pointer; transition: .2s;
+  font-size: 10px; font-family: var(--font); font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 4px 6px; cursor: pointer; transition: color .2s;
 }
 .nav-btn.active { color: var(--gold); }
 .nav-btn span { font-size: 22px; }
 
-/* ===== HEADER ===== */
-.header {
-  background: linear-gradient(135deg, var(--card) 0%, var(--blue) 100%);
-  padding: 20px 16px 16px;
-  text-align: center;
-}
-.header h1 { font-size: 20px; font-weight: 900; color: var(--gold); }
-.header p { font-size: 12px; color: var(--gray); margin-top: 4px; }
-
 /* ===== SCREENS ===== */
-.screen { display: none; padding: 16px; }
+.screen { display: none; padding: 14px; }
 .screen.active { display: block; }
 
 /* ===== CARDS ===== */
 .card {
   background: var(--card);
-  border-radius: 16px;
+  border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 12px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: var(--shadow);
 }
 .card-title {
-  font-size: 13px; font-weight: 700; color: var(--gold);
-  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;
+  font-size: 12px; font-weight: 800; color: var(--gold);
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.2px;
 }
+
+/* ===== STAT ROWS ===== */
 .stat-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 0;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
+.stat-row:last-child { border-bottom: none; }
 .stat-label { font-size: 13px; color: var(--gray); }
 .stat-value { font-size: 15px; font-weight: 800; }
 .stat-value.green { color: var(--green); }
 .stat-value.red { color: var(--red); }
 .stat-value.gold { color: var(--gold); }
 
-/* ===== BIG STATS ===== */
+/* ===== BIG STAT ===== */
 .big-stat {
-  text-align: center; padding: 20px;
-  background: linear-gradient(135deg, var(--card), var(--card2));
-  border-radius: 16px; margin-bottom: 12px;
+  text-align: center; padding: 22px 16px;
+  background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+  border-radius: var(--radius); margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.04);
 }
-.big-stat .number { font-size: 36px; font-weight: 900; }
-.big-stat .label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+.big-stat .number { font-size: 38px; font-weight: 900; line-height: 1.1; }
+.big-stat .label { font-size: 12px; color: var(--gray); margin-top: 6px; font-weight: 600; }
 
 /* ===== TABS ===== */
 .tabs {
-  display: flex; gap: 8px; margin-bottom: 16px;
+  display: flex; gap: 6px; margin-bottom: 14px;
   overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; padding-bottom: 2px;
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab {
-  padding: 8px 16px; border-radius: 20px;
+  padding: 7px 14px; border-radius: 20px;
   background: var(--card); color: var(--gray);
-  font-size: 13px; font-weight: 700; border: none;
+  font-size: 12px; font-weight: 700; border: none;
   cursor: pointer; white-space: nowrap; font-family: var(--font);
+  transition: all .2s; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.04);
 }
-.tab.active { background: var(--gold); color: var(--bg); }
+.tab.active {
+  background: var(--gold); color: #0F1420;
+  border-color: var(--gold);
+  box-shadow: 0 2px 10px rgba(232,210,29,0.3);
+}
+
+/* ===== HOME PERIOD TABS ===== */
+.period-tabs {
+  display: flex; gap: 6px; margin-bottom: 10px;
+}
+.period-tab {
+  flex: 1; padding: 7px 4px; border-radius: 10px;
+  background: var(--card); color: var(--gray);
+  font-size: 11px; font-weight: 700; border: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer; text-align: center; font-family: var(--font);
+  transition: all .2s;
+}
+.period-tab.active {
+  background: var(--gold-dim); color: var(--gold);
+  border-color: var(--gold);
+}
 
 /* ===== FORM ===== */
 .form-group { margin-bottom: 14px; }
 .form-label {
   font-size: 12px; font-weight: 700; color: var(--gold);
-  margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+  margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
 }
 .form-input {
   width: 100%; padding: 12px 14px;
@@ -143,11 +185,11 @@ body {
 .btn {
   width: 100%; padding: 14px;
   border: none; border-radius: 12px;
-  font-size: 16px; font-weight: 800;
+  font-size: 15px; font-weight: 800;
   font-family: var(--font); cursor: pointer;
   transition: .2s; margin-top: 8px;
 }
-.btn-primary { background: var(--gold); color: var(--bg); }
+.btn-primary { background: var(--gold); color: #0F1420; }
 .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
 .btn-danger { background: var(--red); color: white; }
 
@@ -158,81 +200,108 @@ body {
   margin-bottom: 8px; cursor: pointer;
   display: flex; justify-content: space-between; align-items: center;
   transition: .15s; border-left: 4px solid var(--green);
+  box-shadow: var(--shadow);
 }
 .shift-item.negative { border-left-color: var(--red); }
 .shift-item:active { transform: scale(0.99); }
 .shift-date { font-size: 14px; font-weight: 700; }
-.shift-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.shift-sub { font-size: 11px; color: var(--gray); margin-top: 3px; }
 .shift-profit { font-size: 16px; font-weight: 900; text-align: right; }
 
 /* ===== CHART ===== */
-.chart-container { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
-.bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 160px; padding-top: 10px; }
-.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-container {
+  background: var(--card); border-radius: var(--radius);
+  padding: 14px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.bar-chart {
+  display: flex; align-items: flex-end; gap: 2px;
+  height: 150px; padding-top: 10px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+}
+.bar-chart::-webkit-scrollbar { display: none; }
+.bar-col {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex-shrink: 0;
+}
 .bar {
-  width: 100%; border-radius: 4px 4px 0 0;
+  width: 100%; border-radius: 3px 3px 0 0;
   min-height: 2px; transition: height .5s ease;
 }
-.bar.positive { background: var(--green); }
-.bar.negative { background: var(--red); }
-.bar-label { font-size: 9px; color: var(--gray); }
-.bar-value { font-size: 9px; font-weight: 700; color: var(--white); }
+.bar.positive { background: linear-gradient(180deg, var(--green), #00C853); }
+.bar.negative { background: linear-gradient(180deg, var(--red), #D32F2F); }
+.bar-label { font-size: 8px; color: var(--gray); }
+.bar-value { font-size: 8px; font-weight: 700; color: var(--white); }
 
 /* ===== PROGRESS ===== */
-.progress-bar { height: 12px; background: var(--input-bg); border-radius: 6px; overflow: hidden; margin: 10px 0; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--green)); border-radius: 6px; transition: width .5s; }
-
-/* ===== EXPENSE PIE ===== */
-.expense-item {
-  display: flex; align-items: center; gap: 10px; padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+.progress-bar {
+  height: 12px; background: var(--input-bg);
+  border-radius: 6px; overflow: hidden; margin: 10px 0;
 }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--green));
+  border-radius: 6px; transition: width .5s;
+}
+
+/* ===== EXPENSE BREAKDOWN ===== */
+.expense-item {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.expense-item:last-child { border-bottom: none; }
 .expense-bar-bg { flex: 1; height: 8px; background: var(--input-bg); border-radius: 4px; overflow: hidden; }
-.expense-bar-fill { height: 100%; border-radius: 4px; }
+.expense-bar-fill { height: 100%; border-radius: 4px; transition: width .5s; }
 .expense-label { font-size: 12px; color: var(--gray); min-width: 80px; }
 .expense-val { font-size: 12px; font-weight: 700; min-width: 60px; text-align: right; }
-.expense-pct { font-size: 11px; color: var(--gray); min-width: 40px; text-align: right; }
+.expense-pct { font-size: 11px; color: var(--gray); min-width: 36px; text-align: right; }
 
 /* ===== SETTINGS ===== */
 .setting-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 .setting-label { font-size: 14px; }
 .setting-value { font-size: 14px; font-weight: 700; color: var(--gold); }
 
+/* ===== SYNC DOT ===== */
+.sync-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block; margin-right: 6px;
+}
+.sync-dot.online { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.sync-dot.offline { background: var(--red); }
+.sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
 /* ===== TOAST ===== */
 .toast {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-  background: var(--green); color: white; padding: 12px 24px;
-  border-radius: 12px; font-weight: 700; font-size: 14px;
+  background: var(--green); color: #0F1420; padding: 12px 24px;
+  border-radius: 12px; font-weight: 800; font-size: 14px;
   z-index: 999; transition: transform .3s ease; font-family: var(--font);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
-.toast.error { background: var(--red); }
+.toast.error { background: var(--red); color: white; }
 
 /* ===== MODAL ===== */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.7);
   z-index: 200; display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
 }
 .modal-overlay.show { display: flex; }
 .modal {
   background: var(--card); border-radius: 20px 20px 0 0;
   padding: 24px 16px env(safe-area-inset-bottom, 16px);
   width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
 }
 .modal h3 { font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 16px; text-align: center; }
-
-/* ===== SYNC STATUS ===== */
-.sync-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  display: inline-block; margin-right: 6px;
-}
-.sync-dot.online { background: var(--green); }
-.sync-dot.offline { background: var(--red); }
-.sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .empty-state { text-align: center; padding: 40px 20px; color: var(--gray); }
 .empty-state span { font-size: 48px; display: block; margin-bottom: 12px; }
@@ -247,10 +316,11 @@ body {
 
   <!-- ===== HOME ===== -->
   <div class="screen active" id="screenHome">
-    <div class="tabs" id="homeTabs">
-      <button class="tab active" onclick="setHomePeriod('today')">Сегодня</button>
-      <button class="tab" onclick="setHomePeriod('week')">Неделя</button>
-      <button class="tab" onclick="setHomePeriod('month')">Месяц</button>
+    <div class="tabs" id="homeMonthTabs"></div>
+    <div class="period-tabs" id="homePeriodTabs">
+      <button class="period-tab active" onclick="setHomePeriod('today')">Сегодня</button>
+      <button class="period-tab" onclick="setHomePeriod('week')">Неделя</button>
+      <button class="period-tab" onclick="setHomePeriod('month')">Месяц</button>
     </div>
     <div class="big-stat">
       <div class="number green" id="homeProfitNum">0 ₽</div>
@@ -261,11 +331,10 @@ body {
       <div class="stat-row"><span class="stat-label">💸 Расходы</span><span class="stat-value red" id="homeExpenses">0 ₽</span></div>
       <div class="stat-row"><span class="stat-label">📋 Заявок</span><span class="stat-value" id="homeOrders">0</span></div>
       <div class="stat-row"><span class="stat-label">⏱ Часов</span><span class="stat-value" id="homeHours">0</span></div>
-      <div class="stat-row"><span class="stat-label">📊 Средний чек</span><span class="stat-value gold" id="homeAvg">0 ₽</span></div>
-      <div class="stat-row"><span class="stat-label">⏱ ₽/час</span><span class="stat-value gold" id="homePerHour">0 ₽</span></div>
+      <div class="stat-row"><span class="stat-label">📊 Средний чек</span><span class="stat-value gold" id="homeAvg">—</span></div>
+      <div class="stat-row"><span class="stat-label">⏱ ₽/час</span><span class="stat-value gold" id="homePerHour">—</span></div>
       <div class="stat-row"><span class="stat-label">📅 Смен</span><span class="stat-value" id="homeDays">0</span></div>
     </div>
-    <!-- Goal progress -->
     <div class="card" id="goalCard" style="display:none">
       <div class="card-title">🎯 Цель на месяц</div>
       <div class="stat-row"><span class="stat-label">Цель</span><span class="stat-value gold" id="goalTarget">0 ₽</span></div>
@@ -352,13 +421,14 @@ body {
 
   <!-- ===== STATS ===== -->
   <div class="screen" id="screenStats">
-    <div class="tabs">
+    <div class="tabs" id="statsMonthTabs"></div>
+    <div class="tabs" id="statsTypeTabs">
       <button class="tab active" onclick="setStatTab('profit')">Прибыль</button>
       <button class="tab" onclick="setStatTab('income')">Доход</button>
       <button class="tab" onclick="setStatTab('expenses')">Расходы</button>
     </div>
     <div class="chart-container">
-      <div class="card-title" id="chartTitle">Прибыль по дням</div>
+      <div class="card-title" id="chartTitle">ПРИБЫЛЬ ПО ДНЯМ</div>
       <div class="bar-chart" id="barChart"></div>
     </div>
     <div class="card" id="expenseBreakdown">
@@ -443,15 +513,25 @@ const FIELDS = [
   {key:'other',label:'📝 Прочее',type:'number'},
 ];
 
-// Column map matching the Google Sheet (1-indexed)
 const COL_MAP = {date:2,hours:4,orders:5,earned_cash:6,earned_card:7,tips:8,bonuses:9,
   rent:12,commission:13,fuel_liters:14,fuel_cost:15,wash:16,lunch:17,fines:18,other:19};
-const SHEET_NAMES = {3:'Март 2026',4:'Апрель 2026',5:'Май 2026'};
+
+const SHEET_NAMES = {
+  3:'Март 2026', 4:'Апрель 2026', 5:'Май 2026',
+  6:'Июнь 2026', 7:'Июль 2026', 8:'Август 2026',
+  9:'Сентябрь 2026', 10:'Октябрь 2026', 11:'Ноябрь 2026', 12:'Декабрь 2026'
+};
+const MONTH_SHORT = {
+  3:'Март', 4:'Апр', 5:'Май', 6:'Июнь', 7:'Июль', 8:'Авг',
+  9:'Сен', 10:'Окт', 11:'Ноя', 12:'Дек'
+};
 
 let shifts = JSON.parse(localStorage.getItem('taxi_shifts') || '[]');
 let settings = JSON.parse(localStorage.getItem('taxi_settings') || '{}');
-let homePeriod = 'today';
+let homePeriod = 'month';
+let homeMonth = new Date().getMonth() + 1;
 let statTab = 'profit';
+let statsMonth = new Date().getMonth() + 1;
 let editIdx = -1;
 let listMonth = new Date().getMonth() + 1;
 
@@ -477,13 +557,13 @@ function fmt(v) { return Math.round(v).toLocaleString('ru-RU'); }
 function calcIncome(s) { return n(s.earned_cash)+n(s.earned_card)+n(s.tips)+n(s.bonuses); }
 function calcExpenses(s) { return n(s.rent)+n(s.commission)+n(s.fuel_cost)+n(s.wash)+n(s.lunch)+n(s.fines)+n(s.other); }
 function calcProfit(s) { return calcIncome(s) - calcExpenses(s); }
-function parseDate(d) { // "DD.MM.YYYY" or "YYYY-MM-DD"
+function parseDate(d) {
   if (!d) return null;
   if (d.includes('-')) return new Date(d);
   const [dd,mm,yy] = d.split('.');
   return new Date(yy, mm-1, dd);
 }
-function fmtDate(d) { // Date -> "DD.MM.YYYY"
+function fmtDate(d) {
   if (typeof d === 'string' && d.includes('-')) d = new Date(d);
   if (!(d instanceof Date)) return d;
   return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
@@ -506,9 +586,42 @@ function save() {
   });
 }
 
+// Get months that have data + current month
+function getAvailableMonths() {
+  const months = new Set();
+  shifts.forEach(s => {
+    const d = parseDate(s.date);
+    if (d) months.add(d.getMonth() + 1);
+  });
+  months.add(new Date().getMonth() + 1);
+  // Add all SHEET_NAMES months
+  Object.keys(SHEET_NAMES).forEach(m => months.add(parseInt(m)));
+  return Array.from(months).filter(m => m >= 3).sort((a,b) => a - b);
+}
+
+// ==================== MONTH TABS BUILDER ====================
+function buildMonthTabs(containerId, activeMonth, onClickFn) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  const sorted = getAvailableMonths();
+
+  sorted.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (m === activeMonth ? ' active' : '');
+    btn.textContent = MONTH_SHORT[m] || SHEET_NAMES[m];
+    btn.onclick = () => onClickFn(m);
+    el.appendChild(btn);
+  });
+
+  // Scroll active tab into view
+  requestAnimationFrame(() => {
+    const activeBtn = el.querySelector('.tab.active');
+    if (activeBtn) activeBtn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  });
+}
+
 // ==================== SAVE SHIFT ====================
 function dateToRu(isoDate) {
-  // YYYY-MM-DD -> DD.MM.YYYY
   const [y,m,d] = isoDate.split('-');
   return `${d}.${m}.${y}`;
 }
@@ -533,17 +646,15 @@ async function saveShift() {
   shift.fines = n(document.getElementById('fFines').value);
   shift.other = n(document.getElementById('fOther').value);
   if (!shift.hours || !shift.orders) { toast('Заполни часы и заявки!', true); return; }
-  
-  // Save locally
+
   shifts.push(shift);
   save();
-  
-  // Write to Google Sheets via Apps Script
+
   if (settings.scriptUrl) {
     try {
       const sheetShift = {...shift, date: dateToRu(shift.date)};
       const r = await fetch(settings.scriptUrl, {
-        method: 'POST', 
+        method: 'POST',
         headers: {'Content-Type': 'text/plain'},
         body: JSON.stringify({action: 'add', shift: sheetShift})
       });
@@ -559,31 +670,56 @@ async function saveShift() {
   } else {
     toast('✅ Смена записана локально!');
   }
-  
+
   document.querySelectorAll('#screenAdd input[type=number]').forEach(i => i.value = '');
   document.querySelector('.nav-btn').click();
   renderHome();
 }
 
 // ==================== HOME ====================
+function setHomeMonth(m) {
+  homeMonth = m;
+  renderHome();
+}
 function setHomePeriod(p) {
   homePeriod = p;
-  document.querySelectorAll('#homeTabs .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#homePeriodTabs .period-tab').forEach(t => t.classList.remove('active'));
   event.currentTarget.classList.add('active');
   renderHome();
 }
+
 function renderHome() {
+  buildMonthTabs('homeMonthTabs', homeMonth, setHomeMonth);
+
   const now = new Date();
   const today = now.toISOString().split('T')[0];
-  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay() + 1);
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const isCurrentMonth = (homeMonth === now.getMonth() + 1);
 
-  let filtered = shifts.filter(s => {
-    const d = parseDate(s.date);
-    if (homePeriod === 'today') return s.date === today;
-    if (homePeriod === 'week') return d >= weekStart && d <= now;
-    if (homePeriod === 'month') return d >= monthStart && d <= now;
-  });
+  // Show period tabs only for current month
+  const periodTabsEl = document.getElementById('homePeriodTabs');
+  if (isCurrentMonth) {
+    periodTabsEl.style.display = '';
+  } else {
+    periodTabsEl.style.display = 'none';
+  }
+
+  let filtered;
+  if (isCurrentMonth && homePeriod === 'today') {
+    filtered = shifts.filter(s => s.date === today);
+  } else if (isCurrentMonth && homePeriod === 'week') {
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay() + 1);
+    filtered = shifts.filter(s => {
+      const d = parseDate(s.date);
+      return d && d >= weekStart && d <= now && (d.getMonth()+1) === homeMonth;
+    });
+  } else {
+    // whole month
+    filtered = shifts.filter(s => {
+      const d = parseDate(s.date);
+      return d && (d.getMonth()+1) === homeMonth;
+    });
+  }
 
   let income=0, expenses=0, orders=0, hours=0;
   filtered.forEach(s => {
@@ -606,15 +742,14 @@ function renderHome() {
   // Goal
   const goal = n(settings.goal);
   const goalCard = document.getElementById('goalCard');
-  if (goal > 0 && homePeriod === 'month') {
+  if (goal > 0 && isCurrentMonth && homePeriod === 'month') {
     goalCard.style.display = '';
-    const monthProfit = profit;
-    const pct = Math.min(Math.round(monthProfit / goal * 100), 100);
+    const pct = Math.min(Math.round(profit / goal * 100), 100);
     const daysLeft = 31 - filtered.length;
     el('goalTarget', fmt(goal) + ' ₽');
     el('goalPct', pct + '%');
-    el('goalRemain', fmt(goal - monthProfit) + ' ₽');
-    el('goalPerDay', daysLeft > 0 ? fmt((goal - monthProfit) / daysLeft) + ' ₽' : '—');
+    el('goalRemain', fmt(goal - profit) + ' ₽');
+    el('goalPerDay', daysLeft > 0 ? fmt((goal - profit) / daysLeft) + ' ₽' : '—');
     document.getElementById('goalFill').style.width = Math.max(0, pct) + '%';
   } else {
     goalCard.style.display = 'none';
@@ -623,16 +758,7 @@ function renderHome() {
 
 // ==================== LIST ====================
 function renderList() {
-  // Month tabs
-  const tabsEl = document.getElementById('monthTabs');
-  tabsEl.innerHTML = '';
-  [3,4,5].forEach(m => {
-    const btn = document.createElement('button');
-    btn.className = 'tab' + (m === listMonth ? ' active' : '');
-    btn.textContent = SHEET_NAMES[m];
-    btn.onclick = () => { listMonth = m; renderList(); };
-    tabsEl.appendChild(btn);
-  });
+  buildMonthTabs('monthTabs', listMonth, (m) => { listMonth = m; renderList(); });
 
   const listEl = document.getElementById('shiftsList');
   const monthShifts = shifts.filter(s => {
@@ -667,9 +793,6 @@ function openEdit(idx) {
   const form = document.getElementById('editForm');
   form.innerHTML = FIELDS.map(f => {
     let val = s[f.key] || '';
-    if (f.key === 'date' && val.includes('-')) {
-      // keep as YYYY-MM-DD for input type=date
-    }
     return `<div class="form-group">
       <div class="form-label">${f.label}</div>
       <input type="${f.type}" ${f.step?'step="'+f.step+'"':''} class="form-input" id="e_${f.key}" value="${val}">
@@ -683,18 +806,16 @@ async function saveEdit() {
   if (editIdx < 0) return;
   const oldDate = fmtDate(parseDate(shifts[editIdx].date));
   const oldMonth = parseDate(shifts[editIdx].date).getMonth() + 1;
-  
+
   FIELDS.forEach(f => {
     const v = document.getElementById('e_' + f.key).value;
     shifts[editIdx][f.key] = f.type === 'number' ? n(v) : v;
   });
   save();
-  
-  // Sync each changed field to sheet
+
   if (settings.scriptUrl) {
     try {
       const s = shifts[editIdx];
-      // Re-add the entire shift (delete old + add new)
       await fetch(settings.scriptUrl, {
         method: 'POST', headers: {'Content-Type': 'text/plain'},
         body: JSON.stringify({action: 'delete', date: oldDate, month: oldMonth})
@@ -706,7 +827,7 @@ async function saveEdit() {
       });
     } catch(e) { console.warn('Sheet sync error:', e); }
   }
-  
+
   closeEdit();
   toast('✅ Сохранено!');
   renderList();
@@ -716,15 +837,14 @@ async function saveEdit() {
 async function deleteShift() {
   if (editIdx < 0) return;
   if (!confirm('Удалить эту смену?')) return;
-  
+
   const s = shifts[editIdx];
   const dateStr = fmtDate(parseDate(s.date));
   const month = parseDate(s.date).getMonth() + 1;
-  
+
   shifts.splice(editIdx, 1);
   save();
-  
-  // Delete from sheet
+
   if (settings.scriptUrl) {
     try {
       await fetch(settings.scriptUrl, {
@@ -733,42 +853,55 @@ async function deleteShift() {
       });
     } catch(e) { console.warn('Sheet delete error:', e); }
   }
-  
+
   closeEdit();
   toast('🗑 Удалено');
   renderList();
 }
 
 // ==================== STATS ====================
+function setStatsMonth(m) {
+  statsMonth = m;
+  renderStats();
+}
 function setStatTab(t) {
   statTab = t;
-  document.querySelectorAll('#screenStats .tabs .tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#statsTypeTabs .tab').forEach(b => b.classList.remove('active'));
   event.currentTarget.classList.add('active');
   renderStats();
 }
+
 function renderStats() {
-  const now = new Date();
+  buildMonthTabs('statsMonthTabs', statsMonth, setStatsMonth);
+
   const monthShifts = shifts.filter(s => {
     const d = parseDate(s.date);
-    return d && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    return d && (d.getMonth() + 1) === statsMonth;
   }).sort((a,b) => parseDate(a.date) - parseDate(b.date));
 
   // Bar chart
   const chart = document.getElementById('barChart');
   const title = document.getElementById('chartTitle');
   let values = [];
-  if (statTab === 'profit') { title.textContent = 'Прибыль по дням'; values = monthShifts.map(s => ({v: calcProfit(s), d: s.date})); }
-  if (statTab === 'income') { title.textContent = 'Доход по дням'; values = monthShifts.map(s => ({v: calcIncome(s), d: s.date})); }
-  if (statTab === 'expenses') { title.textContent = 'Расходы по дням'; values = monthShifts.map(s => ({v: calcExpenses(s), d: s.date})); }
+  if (statTab === 'profit') { title.textContent = 'ПРИБЫЛЬ ПО ДНЯМ'; values = monthShifts.map(s => ({v: calcProfit(s), d: s.date})); }
+  if (statTab === 'income') { title.textContent = 'ДОХОД ПО ДНЯМ'; values = monthShifts.map(s => ({v: calcIncome(s), d: s.date})); }
+  if (statTab === 'expenses') { title.textContent = 'РАСХОДЫ ПО ДНЯМ'; values = monthShifts.map(s => ({v: calcExpenses(s), d: s.date})); }
 
   if (!values.length) {
     chart.innerHTML = '<div class="empty-state" style="height:100%;display:flex;align-items:center;justify-content:center"><span style="font-size:24px">📊</span></div>';
   } else {
     const maxAbs = Math.max(...values.map(v => Math.abs(v.v)), 1);
+    // Adaptive bar width
+    const containerWidth = chart.parentElement.clientWidth - 28;
+    const barMinWidth = 24;
+    const totalBarsWidth = values.length * (barMinWidth + 2);
+    const useScroll = totalBarsWidth > containerWidth;
+    const barWidth = useScroll ? barMinWidth : Math.max(Math.floor(containerWidth / values.length) - 2, barMinWidth);
+
     chart.innerHTML = values.map(v => {
-      const h = Math.max(Math.abs(v.v) / maxAbs * 140, 4);
+      const h = Math.max(Math.abs(v.v) / maxAbs * 120, 4);
       const dt = parseDate(v.d);
-      return `<div class="bar-col">
+      return `<div class="bar-col" style="width:${barWidth}px">
         <div class="bar-value">${fmt(v.v)}</div>
         <div class="bar ${v.v>=0?'positive':'negative'}" style="height:${h}px"></div>
         <div class="bar-label">${dt.getDate()}</div>
@@ -813,6 +946,9 @@ function renderStats() {
     });
     document.getElementById('statBest').textContent = fmtDate(parseDate(best.date)) + ' → ' + fmt(calcProfit(best)) + ' ₽';
     document.getElementById('statWorst').textContent = fmtDate(parseDate(worst.date)) + ' → ' + fmt(calcProfit(worst)) + ' ₽';
+  } else {
+    document.getElementById('statBest').textContent = '—';
+    document.getElementById('statWorst').textContent = '—';
   }
 }
 
@@ -855,8 +991,7 @@ async function syncFromSheet() {
     const r = await fetch(settings.scriptUrl + '?action=read');
     const data = await r.json();
     if (data.error) throw new Error(data.error);
-    
-    // Convert DD.MM.YYYY dates to YYYY-MM-DD for local storage
+
     const allShifts = (data.shifts || []).map(s => {
       let dateStr = s.date;
       if (dateStr && dateStr.includes('.')) {
@@ -865,7 +1000,7 @@ async function syncFromSheet() {
       }
       return {...s, date: dateStr};
     });
-    
+
     shifts = allShifts;
     save();
     updateSyncStatus();
@@ -916,9 +1051,7 @@ function clearAllData() {
 // ==================== INIT ====================
 updateSyncStatus();
 renderHome();
-// Set today's date
 document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-// Register SW
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
